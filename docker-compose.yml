@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  jenkins:
+    restart: unless-stopped
+    container_name: jenkins
+    build:
+      context: ./compose/docker/jenkins
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - /usr/bin/docker:/usr/bin/docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      - jenkins_data:/var/jenkins_home
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "25m"
+        max-file: "50"
+    networks:
+      - network-bridge
+
+volumes:
+  jenkins_data: {}
+
+networks:
+  network-bridge:
+    driver: bridge
